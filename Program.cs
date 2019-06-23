@@ -14,8 +14,6 @@ namespace AutoMarkCheck
 
         static DateTime _lastGradeCheck = DateTime.MinValue;
         static MarkCredentials _credentials;
-        static bool _missingCredentials = false;
-        static bool _actionStarted = false;
         static CancellationTokenSource _actionDelayCancellation = new CancellationTokenSource();
 
         static void Main(string[] args)
@@ -36,7 +34,7 @@ namespace AutoMarkCheck
 
             Console.WriteLine("Log level set to: " + Settings.LogLevel.ToString());
             Logging.SetLogLevel(Settings.LogLevel);
-
+            
             Console.WriteLine("Loading credentials...");
             _credentials = CredentialManager.GetCredentials(false);
 
@@ -44,65 +42,15 @@ namespace AutoMarkCheck
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Credentials missing!");
-                _missingCredentials = true;
-                askCredentials();
+                Console.ResetColor();
+                return;
             }
 
-            startGradeCheckPolling();
-
-            if(!_missingCredentials)
-            {
-                
-                while (true)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("Do you want to change your credentials? (Y/N) (10 seconds): ");
-                    Console.ResetColor();
-                    char key = Console.ReadKey().KeyChar;
-                    Console.WriteLine();
-                    switch (key)
-                    {
-                        case 'n':
-                        case 'N':
-                            _actionDelayCancellation.Cancel();
-                            goto fin;
-                        case 'y':
-                        case 'Y':
-                            _actionStarted = true;
-                            _actionDelayCancellation.Cancel();
-                            askCredentials();
-                            startGradeCheckPolling();
-                            goto fin;
-                    }
-                }
-            }
-
-        fin:
-            while (true)
-            {
-                DateTime nextCheck = _lastGradeCheck.AddSeconds(Settings.GradeCheckInterval).AddMinutes(1);
-                if (nextCheck < DateTime.Now)
-                    nextCheck = DateTime.Now;
-                TimeSpan timeTillNext = nextCheck - DateTime.Now;
-                Console.WriteLine($"Next grade check at: {nextCheck.ToShortTimeString()} (in apprx {timeTillNext.Hours} hours, {timeTillNext.Minutes} minutes)");
-                Console.ReadLine();
-            }
+            startGradeCheckPolling().Wait();
         }
 
-        private static async void startGradeCheckPolling()
+        private static async Task startGradeCheckPolling()
         {
-            // Awaits user action at beginning of program, times out after 10s
-            if (!_actionDelayCancellation.IsCancellationRequested)
-            {
-                try
-                {
-                    await Task.Delay(10000, _actionDelayCancellation.Token);
-                }
-                catch { }
-                if (_actionStarted) // Cancel this async method when the user does something at the start
-                    return;
-            }
-
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("\nReady!");
             Console.ResetColor();
