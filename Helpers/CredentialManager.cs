@@ -39,9 +39,9 @@ namespace AutoMarkCheck.Helpers
         {
             try
             {
-                string F5VuwUsername = Environment.GetEnvironmentVariable(VuwUsernameEnvironmentVariable, EnvironmentVariableTarget.User);
-                string F5VuwPassword = Environment.GetEnvironmentVariable(VuwPasswordEnvironmentVariable, EnvironmentVariableTarget.User);
-                string F5ApiKey = Environment.GetEnvironmentVariable(ApiKeyEnvironmentVariable, EnvironmentVariableTarget.User);
+                string F5VuwUsername = Environment.GetEnvironmentVariable(VuwUsernameEnvironmentVariable);
+                string F5VuwPassword = Environment.GetEnvironmentVariable(VuwPasswordEnvironmentVariable);
+                string F5ApiKey = Environment.GetEnvironmentVariable(ApiKeyEnvironmentVariable);
 
                 bool missingCreds = false;
 
@@ -100,9 +100,9 @@ namespace AutoMarkCheck.Helpers
         {
             try
             {
-                Environment.SetEnvironmentVariable(VuwUsernameEnvironmentVariable, credentials.Username, EnvironmentVariableTarget.User);
-                Environment.SetEnvironmentVariable(VuwPasswordEnvironmentVariable, credentials.Password, EnvironmentVariableTarget.User);
-                Environment.SetEnvironmentVariable(ApiKeyEnvironmentVariable, credentials.ApiKey, EnvironmentVariableTarget.User);
+                Environment.SetEnvironmentVariable(VuwUsernameEnvironmentVariable, credentials.Username);
+                Environment.SetEnvironmentVariable(VuwPasswordEnvironmentVariable, credentials.Password);
+                Environment.SetEnvironmentVariable(ApiKeyEnvironmentVariable, credentials.ApiKey);
 
                 Logging.Log(Logging.LogLevel.INFO, $"{nameof(AutoMarkCheck)}.{nameof(Helpers)}.{nameof(CredentialManager)}.{nameof(SetCredentials)}", "New credentials saved.");
             }
@@ -119,9 +119,9 @@ namespace AutoMarkCheck.Helpers
         {
             try
             {
-                Environment.SetEnvironmentVariable(VuwUsernameEnvironmentVariable, "", EnvironmentVariableTarget.User);
-                Environment.SetEnvironmentVariable(VuwPasswordEnvironmentVariable, "", EnvironmentVariableTarget.User);
-                Environment.SetEnvironmentVariable(ApiKeyEnvironmentVariable, "", EnvironmentVariableTarget.User);
+                Environment.SetEnvironmentVariable(VuwUsernameEnvironmentVariable, "");
+                Environment.SetEnvironmentVariable(VuwPasswordEnvironmentVariable, "");
+                Environment.SetEnvironmentVariable(ApiKeyEnvironmentVariable, "");
 
                 Logging.Log(Logging.LogLevel.INFO, $"{nameof(AutoMarkCheck)}.{nameof(Helpers)}.{nameof(CredentialManager)}.{nameof(DeleteCredentials)}", "Credentials successfully delete from the credential store.");
             }
