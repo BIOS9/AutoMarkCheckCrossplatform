@@ -1,9 +1,13 @@
-AutoMarkCheckCrossplatform
+# AutoMarkCheckCrossplatform
 
-To build:<br />
-git clone https://github.com/BIOS9/AutoMarkCheckCrossplatform.git<br />
-cd AutoMarkCheckCrossplatform<br />
-dotnet build<br />
-<br />
-To run:<br />
+To build:
+```
+git clone https://github.com/BIOS9/AutoMarkCheckCrossplatform.git
+cd AutoMarkCheckCrossplatform
+dotnet build
+```
+
+To run:
+```
 dotnet run
+```
